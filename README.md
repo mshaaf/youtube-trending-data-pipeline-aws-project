@@ -71,6 +71,6 @@ All infrastructure is provisioned and run via AWS CLI (see the commands below). 
 2. Run a Glue Crawler over the raw bucket to populate the Bronze Glue Catalog table.
 3. Upload the scripts in `glue_jobs/` to S3 and create the two Glue jobs with `aws glue create-job`.
 4. Deploy the Lambda in `lambdas/json_to_parquet/` with the AWS SDK for pandas (awswrangler) layer attached.
-5. Create the Step Functions state machine from `step_functions/pipeline_orchestration.json`, pointing its resource ARNs at your own Lambda/Glue job names.
+5. Create the Step Functions state machine from `step_functions/pipeline_orchestration.json`, swapping `<YOUR_AWS_ACCOUNT_ID>` and pointing its resource ARNs at your own Lambda/Glue job names.
 6. Run the pipeline with `aws stepfunctions start-execution`.
 7. Query the Gold tables (or Silver directly) via Athena and connect Tableau Public to the exported results.

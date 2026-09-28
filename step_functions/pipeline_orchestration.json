@@ -12,7 +12,7 @@
               "Type": "Task",
               "Resource": "arn:aws:states:::lambda:invoke",
               "Parameters": {
-                "FunctionName": "arn:aws:lambda:us-east-1:296121912765:function:data-ytproject-raw-useast1-lambda-json-parquet",
+                "FunctionName": "arn:aws:lambda:us-east-1:<YOUR_AWS_ACCOUNT_ID>:function:data-ytproject-raw-useast1-lambda-json-parquet",
                 "Payload": {
                   "Records": [
                     {

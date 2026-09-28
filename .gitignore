@@ -1,0 +1,8 @@
+.DS_Store
+*.pyc
+__pycache__/
+.aws/
+*.csv
+*.twbx
+*.hyper
+.env

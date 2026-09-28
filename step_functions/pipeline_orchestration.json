@@ -1,0 +1,80 @@
+{
+  "Comment": "YouTube trending data pipeline: reference-data transform + Bronze-to-Silver run in parallel, then Silver-to-Gold",
+  "StartAt": "SilverLayerTransforms",
+  "States": {
+    "SilverLayerTransforms": {
+      "Type": "Parallel",
+      "Branches": [
+        {
+          "StartAt": "TransformReferenceData",
+          "States": {
+            "TransformReferenceData": {
+              "Type": "Task",
+              "Resource": "arn:aws:states:::lambda:invoke",
+              "Parameters": {
+                "FunctionName": "arn:aws:lambda:us-east-1:296121912765:function:data-ytproject-raw-useast1-lambda-json-parquet",
+                "Payload": {
+                  "Records": [
+                    {
+                      "s3": {
+                        "bucket": { "name": "data-ytproject-raw-useast1-dev" },
+                        "object": { "key": "youtube/raw_statistics_reference_data/US_category_id.json" }
+                      }
+                    }
+                  ]
+                }
+              },
+              "Retry": [
+                {
+                  "ErrorEquals": ["Lambda.ServiceException", "Lambda.AWSLambdaException", "Lambda.SdkClientException", "Lambda.TooManyRequestsException"],
+                  "IntervalSeconds": 5,
+                  "MaxAttempts": 3,
+                  "BackoffRate": 2.0
+                }
+              ],
+              "End": true
+            }
+          }
+        },
+        {
+          "StartAt": "BronzeToSilverStatistics",
+          "States": {
+            "BronzeToSilverStatistics": {
+              "Type": "Task",
+              "Resource": "arn:aws:states:::glue:startJobRun.sync",
+              "Parameters": {
+                "JobName": "data-ytproject-bronze-to-silver-statistics"
+              },
+              "Retry": [
+                {
+                  "ErrorEquals": ["Glue.AWSGlueException"],
+                  "IntervalSeconds": 30,
+                  "MaxAttempts": 2,
+                  "BackoffRate": 2.0
+                }
+              ],
+              "End": true
+            }
+          }
+        }
+      ],
+      "Next": "SilverToGoldAnalytics"
+    },
+    "SilverToGoldAnalytics": {
+      "Type": "Task",
+      "Resource": "arn:aws:states:::glue:startJobRun.sync",
+      "Parameters": {
+        "JobName": "data-ytproject-silver-to-gold-analytics"
+      },
+      "Retry": [
+        {
+          "ErrorEquals": ["Glue.AWSGlueException"],
+          "IntervalSeconds": 30,
+          "MaxAttempts": 2,
+          "BackoffRate": 2.0
+        }
+      ],
+      "End": true
+    }
+  }
+}

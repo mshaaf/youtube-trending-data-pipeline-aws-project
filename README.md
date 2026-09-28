@@ -46,7 +46,11 @@ This project involved debugging a real, non-trivial AWS pipeline end to end rath
 
 ## Dashboard
 
-Built in Tableau Public: top trending videos, category breakdown by peak views, and a distribution of how many regions each video trended in. [Add your published Tableau Public link here]
+Built in Tableau Public: top trending videos, category breakdown by peak views, and a distribution of how many regions each video trended in.
+
+![YouTube Trending Video Analysis Dashboard](assets/dashboard.png)
+
+https://public.tableau.com/app/profile/muhammad.shaaf1753/viz/youtubevideoanalysis_17906396383200/Dashboard1?publish=yes
 
 ## Repo structure
 
